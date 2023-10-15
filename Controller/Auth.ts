@@ -8,8 +8,10 @@ const response = new ServerResponseClass();
 export default {
     login: async (req: any, res: any) => {
         const { email, password } = req.body;
+        console.log(req.body)
         try {
             const User = await UserModel.findOne({ email });
+            console.log(User)
             if (!User) {
                 response.handleNotFound(res, 'Incorrect Email.');
             } else {

@@ -21,14 +21,6 @@ export default {
             response.somethingWentWrong(res);
         }
     },
-    getUsers: async (req: any, res: any) => {
-        try {
-            const Users = await UserModel.find();
-            response.handleSuccess(res, Users, 'users fetched Successfully');
-        } catch (error) {
-            console.log("Exception", error);
-            response.somethingWentWrong(res)
-        }
-    },
+   
     
 }
