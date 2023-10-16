@@ -17,8 +17,30 @@ export default {
 
     getTransactions: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.find({created_by: req.user._id});
+            const Transaction = await TransactionsModel.find({created_by: req.user.userId});
             response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
+        } catch (error) {
+            console.error(error);
+            response.somethingWentWrong(res);
+        }
+    },
+
+    getEarning: async (req: any, res: any) => {
+        try {
+            const Earning = await TransactionsModel.find({created_by: req.user.userId, DrCr:"earning"});
+            console.log(Earning)
+            response.handleSuccess(res, Earning, 'Earning fetched Successfully');
+        } catch (error) {
+            console.error(error);
+            response.somethingWentWrong(res);
+        }
+    },
+
+    getExpense: async (req: any, res: any) => {
+        try {
+            const Expense = await TransactionsModel.find({created_by: req.user.userId, DrCr:"expense"});
+            console.log(Expense)
+            response.handleSuccess(res, Expense, 'Expense fetched Successfully');
         } catch (error) {
             console.error(error);
             response.somethingWentWrong(res);

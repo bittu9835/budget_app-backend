@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export default (connection: any) => {
-    const schema =  new connection.Schema({
+    const schema = new connection.Schema({
         amount: {
             type: Number,
             required: true
@@ -14,13 +14,18 @@ export default (connection: any) => {
             type: String,
             required: true
         },
-        from:{
-          type:String,
-          require:true
+        paymentMethod: {
+            type: String,
+            require: true
         },
-        created_at:{
-            type:Date,
-            require:true
+        from: {
+            type: String,
+            require: true
+        },
+        created_at: {
+            type: Date,
+            require: true,
+            default: Date.now()
         },
         created_by: {
             type: mongoose.Schema.Types.ObjectId,
