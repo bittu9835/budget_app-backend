@@ -28,7 +28,6 @@ export default {
     getEarning: async (req: any, res: any) => {
         try {
             const Earning = await TransactionsModel.find({created_by: req.user.userId, DrCr:"earning"});
-            console.log(Earning)
             response.handleSuccess(res, Earning, 'Earning fetched Successfully');
         } catch (error) {
             console.error(error);
@@ -39,7 +38,6 @@ export default {
     getExpense: async (req: any, res: any) => {
         try {
             const Expense = await TransactionsModel.find({created_by: req.user.userId, DrCr:"expense"});
-            console.log(Expense)
             response.handleSuccess(res, Expense, 'Expense fetched Successfully');
         } catch (error) {
             console.error(error);
