@@ -6,7 +6,11 @@ export default (connection: any) => {
             type: Number,
             required: true
         },
-        DrCr: {
+        action: {
+            type: String,
+            required: true
+        },
+        category: {
             type: String,
             required: true
         },
@@ -26,6 +30,10 @@ export default (connection: any) => {
             type: Date,
             require: true,
             default: Date.now()
+        },
+        date:{
+            type: Date,
+            require: true,
         },
         created_by: {
             type: mongoose.Schema.Types.ObjectId,
