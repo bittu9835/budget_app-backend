@@ -11,6 +11,6 @@ app.use('/api',API);
 // database connectionS
 import ('./DB/DBconnection')
 
-app.listen(ENV.APP_PORT, () => {
+app.listen(ENV.APP_PORT,() => {
     console.log(`Server is running on port ${ENV.APP_PORT}`);
 });
