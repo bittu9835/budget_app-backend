@@ -32,6 +32,26 @@ export default {
         }
     },
 
+    getTransactionsForEdit: async (req: any, res: any) => {
+        try {
+            const Transaction = await TransactionsModel.findOne({_id: req.query._id},{ _id: 1, amount: 1, action: 1, category:1, description:1,paymentMethod:1,from:1,date:1,});
+            response.handleSuccess(res, Transaction, 'Transaction fetched ForEdit Successfully');
+        } catch (error) {
+            console.error(error);
+            response.somethingWentWrong(res);
+        }
+    },
+
+    editTransactions: async (req: any, res: any) => {
+        try {
+            const Transaction = await TransactionsModel.findByIdAndUpdate({_id:req.body._id}, req.body);
+            response.handleSuccess(res, Transaction, 'Transaction Updated');
+        } catch (error) {
+            console.error(error);
+            response.somethingWentWrong(res);
+        }
+    },
+
     deleteTransactions: async (req: any, res: any) => {
         try {
             const result = await TransactionsModel.deleteMany({ _id: req.body });
