@@ -12,7 +12,7 @@ export default {
                 const newTransaction = await TransactionsModel.create(req.body);
                 response.handleSuccess(res, newTransaction, 'Transaction Added.')
             } else {
-                await CategoryModel.create({category:req.body.newCategory?.toUpperCase(),action:req.body.action});
+                await CategoryModel.create({ category: req.body.newCategory?.toUpperCase(), action: req.body.action });
                 const newTransaction = await TransactionsModel.create(req.body);
                 response.handleSuccess(res, newTransaction, 'Transaction Added.')
             }
@@ -21,10 +21,28 @@ export default {
             response.somethingWentWrong(res);
         }
     },
-
     getTransactions: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.find({ created_by: req.user.userId }).sort({ created_at: -1 });
+            const searchValue = req.query.search;
+            const filter = {
+                created_by: req.user.userId,
+                $or: [
+                    { category: { $regex: searchValue, $options: 'i' } },
+                    { description: { $regex: searchValue, $options: 'i' } },
+                    { paymentMethod: { $regex: searchValue, $options: 'i' } },
+                    // { amount: { $eq: parseInt(searchValue) || 0 } }
+                ]
+            };
+            const Transaction = await TransactionsModel.find(filter).sort({ created_at: -1 });
+            response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
+        } catch (error) {
+            console.error(error);
+            response.somethingWentWrong(res);
+        }
+    },
+    getTransactionsForDashboard: async (req: any, res: any) => {
+        try {
+            const Transaction = await TransactionsModel.find({created_by: req.user.userId}).sort({ created_at: -1 });
             response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
         } catch (error) {
             console.error(error);
@@ -34,7 +52,7 @@ export default {
 
     getTransactionsForEdit: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.findOne({_id: req.query._id},{ _id: 1, amount: 1, action: 1, category:1, description:1,paymentMethod:1,from:1,date:1,});
+            const Transaction = await TransactionsModel.findOne({ _id: req.query._id }, { _id: 1, amount: 1, action: 1, category: 1, description: 1, paymentMethod: 1, from: 1, date: 1, });
             response.handleSuccess(res, Transaction, 'Transaction fetched ForEdit Successfully');
         } catch (error) {
             console.error(error);
@@ -44,7 +62,7 @@ export default {
 
     editTransactions: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.findByIdAndUpdate({_id:req.body._id}, req.body);
+            const Transaction = await TransactionsModel.findByIdAndUpdate({ _id: req.body._id }, req.body);
             response.handleSuccess(res, Transaction, 'Transaction Updated');
         } catch (error) {
             console.error(error);

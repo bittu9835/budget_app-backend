@@ -4,6 +4,7 @@ import TransactionsController from "../Controller/TransactionsController";
 
 TransactionsRout.post('/addTransaction', TransactionsController.createTransactions);
 TransactionsRout.get('/getTransaction', TransactionsController.getTransactions);
+TransactionsRout.get('/getTransactionsForDashboard', TransactionsController.getTransactionsForDashboard);
 TransactionsRout.delete('/deleteTransaction', TransactionsController.deleteTransactions);
 TransactionsRout.put('/editTransactions', TransactionsController.editTransactions);
 TransactionsRout.get('/getTransactionsForEdit', TransactionsController.getTransactionsForEdit);

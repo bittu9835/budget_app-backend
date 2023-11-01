@@ -4,7 +4,8 @@ export default (connection: any) => {
     const schema = new connection.Schema({
         balance: {
             type: Number,
-            required: true
+            required: true,
+            default:0
         },
         type:{
           type:String,
@@ -12,6 +13,10 @@ export default (connection: any) => {
           required:true
         },
         Account_number: {
+            type: String,
+            required: true
+        },
+        bankName: {
             type: String,
             required: true
         },
