@@ -4,26 +4,46 @@ export default (connection: any) => {
     const schema = new connection.Schema({
         balance: {
             type: Number,
-            required: true,
             default:0
         },
         type:{
           type:String,
-          enum:['Account','Card'],
+          enum:['bank','card'],
           required:true
         },
-        Account_number: {
+        accountCardNumber: {
+            type: Number,
+            required: true,
+        },
+        bankCardName: {
             type: String,
             required: true
         },
-        bankName: {
+        bankLocation: {
             type: String,
-            required: true
+            required: false
+        },
+        ifcCode: {
+            type: String,
+            required: false
+        },
+        expairyDate: {
+            type: Date,
+            required: false
+        },
+        serviveProvider: {
+            type: String,
+            required: false
         },
         created_at: {
             type: Date,
             require: true,
             default: Date.now()
+        },
+        isActive: {
+            type: Boolean,
+            require: true,
+            default: true,
         },
         created_by: {
             type: mongoose.Schema.Types.ObjectId,
