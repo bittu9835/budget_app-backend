@@ -6,6 +6,10 @@ export default (connection: any) => {
             type: Number,
             default:0
         },
+        name: {
+            type: String,
+            required:true,
+        },
         type:{
           type:String,
           enum:['bank','card'],
