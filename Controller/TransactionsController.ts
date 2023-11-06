@@ -7,7 +7,7 @@ export default {
     createTransactions: async (req: any, res: any) => {
         try {
             req.body['created_by'] = req.user.userId;
-            const Category = await CategoryModel.findOne({ category: req.body.category });
+            const Category = await CategoryModel.findOne({ category: req.body.category.toUpperCase(), action: req.body.action });
             if (Category) {
                 const newTransaction = await TransactionsModel.create(req.body);
                 response.handleSuccess(res, newTransaction, 'Transaction Added.')
@@ -21,6 +21,7 @@ export default {
             response.somethingWentWrong(res);
         }
     },
+
     getTransactions: async (req: any, res: any) => {
         try {
             const searchValue = req.query.search;
@@ -42,7 +43,7 @@ export default {
     },
     getTransactionsForDashboard: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.find({created_by: req.user.userId}).sort({ created_at: -1 });
+            const Transaction = await TransactionsModel.find({ created_by: req.user.userId }).sort({ created_at: -1 });
             response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
         } catch (error) {
             console.error(error);

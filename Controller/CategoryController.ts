@@ -6,6 +6,10 @@ const response = new ServerResponseClass();
 export default {
     createCategory: async (req: any, res: any) => {
         try {
+            const Category = await CategoryModel.find(req.body)
+            if(Category){
+                response.badRequest(res, 'Category Already Exist.')
+            }
             const newCategory = await CategoryModel.create(req.body);
             response.handleSuccess(res, newCategory, 'Category Created.')
         } catch (error) {

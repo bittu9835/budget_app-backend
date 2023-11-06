@@ -3,7 +3,7 @@ export default (connection: any) => {
     const schema = new connection.Schema({
         category: {
             type: String,
-            required: true
+            required: true,
         },
         action: {
             type: String,
