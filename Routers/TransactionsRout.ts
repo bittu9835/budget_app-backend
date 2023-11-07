@@ -8,6 +8,8 @@ TransactionsRout.get('/getTransactionsForDashboard', TransactionsController.getT
 TransactionsRout.delete('/deleteTransaction', TransactionsController.deleteTransactions);
 TransactionsRout.put('/editTransactions', TransactionsController.editTransactions);
 TransactionsRout.get('/getTransactionsForEdit', TransactionsController.getTransactionsForEdit);
+TransactionsRout.get('/getBarGraphData', TransactionsController.getBarGraphData);
+TransactionsRout.get('/getBalanceByPaymentMethod', TransactionsController.getBalanceByPaymentMethod);
 
 
 export default TransactionsRout;

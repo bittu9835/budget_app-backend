@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import { CategoryModel, TransactionsModel } from "../Models/index";
 import ServerResponseClass from "../ServerResponse/ServerRisponse";
+import { getLastMonths, getRandomColor } from "../utils";
 const response = new ServerResponseClass();
 
 
@@ -83,7 +85,85 @@ export default {
             console.error(error);
             response.somethingWentWrong(res);
         }
-    }
+    },
+    getBarGraphData: async (req: any, res: any) => {
+        const userId = new mongoose.Types.ObjectId(req.user.userId);
+        let groupedData = await TransactionsModel.aggregate([
+            {
+                $match: {
+                    created_by: userId,
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        action: '$action',
+                        month: { $month: '$date' },
+                    },
+                    amount: { $sum: '$amount' },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    action: '$_id.action',
+                    month: '$_id.month',
+                    amount: 1
+                }
+            }
+        ])
+        const groupedLogs = groupedData.map((data:any)=>{
+            return{
+                action:data.action,
+                amount:data.amount,
+                month:data.month.toString().length === 1 ? "0"+data.month.toString() : data.month.toString()
+            }
+        })
+        
+        let assetObj: any = {};
+        for (let el of groupedLogs) {
+            assetObj[el.action] = el.action;
+        }
+        let months = getLastMonths(12, 'MMM-YY');
+        let data: any = {
+            labels: months.map((e: any) => e.monthName),
+            datasets: []
+        };
+        for (let action of Object.keys(assetObj)) {
+            let obj: any = {
+                label: action,
+                data: [],
+                backgroundColor: ''
+            }
+            for (let month of months) {
+                let f: any = groupedLogs.find((e: any) => e.action == action && e.month.toString() == month.month)
+                obj.data.push(f ? f.amount : 0)
+                obj.backgroundColor = `rgba(${getRandomColor()}, 1)`
+            }
+            data.datasets.push(obj)
+        }
+        response.handleSuccess(res, data ,'Logs Counted Successfully.')
+    },
+    getBalanceByPaymentMethod: async (req: any, res: any) => {
+        const userId = new mongoose.Types.ObjectId(req.user.userId);
+        let groupedData = await TransactionsModel.aggregate([
+            {
+                $match: {
+                    created_by: userId,
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        pm: '$paymentMethod',
+                        action: "$action"
+                    },
+                    amount: { $sum: "$amount" },
+                }
+            },
+        ])
+        response.handleSuccess(res, groupedData, 'Logs Counted Successfully.')
+    },
 
 
 }
