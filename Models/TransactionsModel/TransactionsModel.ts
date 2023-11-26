@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-
+import hooks from "../../DB/hooks";
 export default (connection: any) => {
     const schema = new connection.Schema({
         amount: {
             type: Number,
             required: true
-        },
+        }, 
         action: {
             type: String,
             required: true
@@ -41,6 +41,7 @@ export default (connection: any) => {
             require: true
         },
     });
+    hooks.transactionAdded(schema,'paymentMethod')
     const TransactionsModel = connection.model('Transactions', schema);
     return TransactionsModel;
 };
