@@ -2,9 +2,10 @@
   "name": "budget_app-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "start": "node server.ts"
+    "start": "node server.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
