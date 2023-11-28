@@ -62,33 +62,33 @@ export default {
 
     gatAccount: async (req: any, res: any) => {
         try {
-            const result = await TransactionsModel.aggregate([
-                {
-                  $match: {
-                      paymentMethod: 'Account',
-                      // created_by: req.user.userId,
-                  },
-                },
-                {
-                  $group: {
-                      _id: '$from', // Group by the 'from' field
-                      totalIncome: {
-                        $sum: { $cond: [{ $eq: ['$action', 'income'] }, '$amount', 0] },
-                      },
-                      totalExpense: {
-                        $sum: { $cond: [{ $eq: ['$action', 'expence'] }, '$amount', 0] },
-                      },
-                    },
-                },
-                {
-                  $project: {
-                    _id: 1,
-                    // totalIncome: 1,
-                    // totalExpense: 1,
-                    available_balance: { $subtract: ["$totalIncome", "$totalExpense"] }
-                  }
-                },
-              ]);
+            // const result = await TransactionsModel.aggregate([
+            //     {
+            //       $match: {
+            //           paymentMethod: 'Account',
+            //           // created_by: req.user.userId,
+            //       },
+            //     },
+            //     {
+            //       $group: {
+            //           _id: '$from', // Group by the 'from' field
+            //           totalIncome: {
+            //             $sum: { $cond: [{ $eq: ['$action', 'income'] }, '$amount', 0] },
+            //           },
+            //           totalExpense: {
+            //             $sum: { $cond: [{ $eq: ['$action', 'expence'] }, '$amount', 0] },
+            //           },
+            //         },
+            //     },
+            //     {
+            //       $project: {
+            //         _id: 1,
+            //         // totalIncome: 1,
+            //         // totalExpense: 1,
+            //         available_balance: { $subtract: ["$totalIncome", "$totalExpense"] }
+            //       }
+            //     },
+            //   ]);
             //   console.log(result)
             const newAccount = await AccountModel.find({ created_by: req.user.userId, isActive: true, type: 'bank' });
             response.handleSuccess(res, newAccount, 'Account Details fetch.')
