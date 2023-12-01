@@ -144,6 +144,34 @@ export default {
         }
         response.handleSuccess(res, data ,'Logs Counted Successfully.')
     },
+    getPieGraphData: async (req: any, res: any) => {
+        const userId = new mongoose.Types.ObjectId(req.user.userId);
+        let groupedData = await TransactionsModel.aggregate([
+            {
+                $match: {
+                    created_by: userId,
+                    action:{$ne:'income'}
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        category: "$category",
+                    },
+                    amount: { $sum: '$amount' },
+                },
+            },
+            {
+                $project: {
+                    _id:0,
+                    category: "$_id.category",
+                    amount:1
+                },
+            },
+        ]); 
+        
+          response.handleSuccess(res, groupedData, 'Logs Counted Successfully.')
+    },
     getBalanceByPaymentMethod: async (req: any, res: any) => {
         const userId = new mongoose.Types.ObjectId(req.user.userId);
         let groupedData = await TransactionsModel.aggregate([

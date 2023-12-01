@@ -9,6 +9,7 @@ TransactionsRout.delete('/deleteTransaction', TransactionsController.deleteTrans
 TransactionsRout.put('/editTransactions', TransactionsController.editTransactions);
 TransactionsRout.get('/getTransactionsForEdit', TransactionsController.getTransactionsForEdit);
 TransactionsRout.get('/getBarGraphData', TransactionsController.getBarGraphData);
+TransactionsRout.get('/getPieGraphData', TransactionsController.getPieGraphData);
 TransactionsRout.get('/getBalanceByPaymentMethod', TransactionsController.getBalanceByPaymentMethod);
 
 
