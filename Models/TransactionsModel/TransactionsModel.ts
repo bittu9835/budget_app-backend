@@ -29,7 +29,7 @@ export default (connection: any) => {
         created_at: {
             type: Date,
             require: true,
-            default: Date.now()
+            default: Date.now
         },
         date:{
             type: Date,

@@ -112,14 +112,13 @@ export default {
                 }
             }
         ])
-        const groupedLogs = groupedData.map((data:any)=>{
-            return{
-                action:data.action,
-                amount:data.amount,
-                month:data.month.toString().length === 1 ? "0"+data.month.toString() : data.month.toString()
+        const groupedLogs = groupedData.map((data: any) => {
+            return {
+                action: data.action,
+                amount: data.amount,
+                month: data.month.toString().length === 1 ? "0" + data.month.toString() : data.month.toString()
             }
         })
-        
         let assetObj: any = {};
         for (let el of groupedLogs) {
             assetObj[el.action] = el.action;
@@ -142,7 +141,7 @@ export default {
             }
             data.datasets.push(obj)
         }
-        response.handleSuccess(res, data ,'Logs Counted Successfully.')
+        response.handleSuccess(res, data, 'Logs Counted Successfully.')
     },
     getPieGraphData: async (req: any, res: any) => {
         const userId = new mongoose.Types.ObjectId(req.user.userId);
@@ -150,7 +149,7 @@ export default {
             {
                 $match: {
                     created_by: userId,
-                    action:{$ne:'income'}
+                    action: { $ne: 'income' }
                 },
             },
             {
@@ -163,14 +162,14 @@ export default {
             },
             {
                 $project: {
-                    _id:0,
+                    _id: 0,
                     category: "$_id.category",
-                    amount:1
+                    amount: 1
                 },
             },
-        ]); 
-        
-          response.handleSuccess(res, groupedData, 'Logs Counted Successfully.')
+        ]);
+
+        response.handleSuccess(res, groupedData, 'Logs Counted Successfully.')
     },
     getBalanceByPaymentMethod: async (req: any, res: any) => {
         const userId = new mongoose.Types.ObjectId(req.user.userId);
@@ -190,7 +189,7 @@ export default {
                 }
             },
         ])
-        response.handleSuccess(res, groupedData, 'Logs Counted Successfully.')
+        response.handleSuccess(res, groupedData, 'getBalanceByPaymentMethod Successfully.')
     },
 
 
