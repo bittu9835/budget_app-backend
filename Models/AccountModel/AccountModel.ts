@@ -4,16 +4,16 @@ export default (connection: any) => {
     const schema = new connection.Schema({
         balance: {
             type: Number,
-            default:0
+            default: 0
         },
         name: {
             type: String,
-            required:true,
+            required: true,
         },
-        type:{
-          type:String,
-          enum:['bank','card'],
-          required:true
+        type: {
+            type: String,
+            enum: ['bank', 'card'],
+            required: true
         },
         accountCardNumber: {
             type: Number,
@@ -35,7 +35,7 @@ export default (connection: any) => {
             type: Date,
             required: false
         },
-        serviveProvider: {
+        serviceProvider: {
             type: String,
             required: false
         },

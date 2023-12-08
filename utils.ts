@@ -9,7 +9,6 @@ export const getLastMonths = (num = 12, format = "MMM") => {
             monthName: currentDate.format(format),
             month: currentDate.format('MM')
         })
-        console.log(months)
     }
     return months;
 }

@@ -29,6 +29,7 @@ export default {
             const searchValue = req.query.search;
             const filter = {
                 created_by: req.user.userId,
+                deleted: false ,
                 $or: [
                     { category: { $regex: searchValue, $options: 'i' } },
                     { description: { $regex: searchValue, $options: 'i' } },
@@ -45,7 +46,7 @@ export default {
     },
     getTransactionsForDashboard: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.find({ created_by: req.user.userId }).sort({ created_at: -1 });
+            const Transaction = await TransactionsModel.find({ created_by: req.user.userId ,deleted: false ,}).sort({ created_at: -1 });
             response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
         } catch (error) {
             console.error(error);
@@ -55,7 +56,7 @@ export default {
 
     getTransactionsForEdit: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.findOne({ _id: req.query._id }, { _id: 1, amount: 1, action: 1, category: 1, description: 1, paymentMethod: 1, from: 1, date: 1, });
+            const Transaction = await TransactionsModel.findOne({ _id: req.query._id ,deleted: false }, { _id: 1, amount: 1, action: 1, category: 1, description: 1, paymentMethod: 1, from: 1, date: 1, });
             response.handleSuccess(res, Transaction, 'Transaction fetched ForEdit Successfully');
         } catch (error) {
             console.error(error);
@@ -65,7 +66,7 @@ export default {
 
     editTransactions: async (req: any, res: any) => {
         try {
-            const Transaction = await TransactionsModel.findByIdAndUpdate({ _id: req.body._id }, req.body);
+            const Transaction = await TransactionsModel.findByIdAndUpdate({ _id: req.body._id }, req.body, { new: true });
             response.handleSuccess(res, Transaction, 'Transaction Updated');
         } catch (error) {
             console.error(error);
@@ -75,12 +76,10 @@ export default {
 
     deleteTransactions: async (req: any, res: any) => {
         try {
-            const result = await TransactionsModel.deleteMany({ _id: req.body });
-            if (result.deletedCount > 0) {
-                response.handleSuccess(res, result, 'Deleted Successfully');
-            } else {
-                response.handleSuccess(res, null, 'No transactions found to delete');
-            }
+            await req.body.forEach(async (req: string) => {
+                await TransactionsModel.findOneAndUpdate({ _id: req }, { deleted: true }, { new: true })
+            });
+            response.handleSuccess(res, null, 'Deleted Successfully');
         } catch (error) {
             console.error(error);
             response.somethingWentWrong(res);
@@ -92,6 +91,7 @@ export default {
             {
                 $match: {
                     created_by: userId,
+                    deleted: false 
                 }
             },
             {
@@ -125,7 +125,7 @@ export default {
         }
         let months = getLastMonths(12, 'MMM-YY');
         let data: any = {
-            labels: months.map((e: any) => e.monthName),
+            labels: months?.map((e: any) => e.monthName) ?? [],
             datasets: []
         };
         for (let action of Object.keys(assetObj)) {
@@ -143,12 +143,79 @@ export default {
         }
         response.handleSuccess(res, data, 'Logs Counted Successfully.')
     },
+    getLineGraphData: async (req: any, res: any) => {
+        const userId = new mongoose.Types.ObjectId(req.user.userId);
+
+        // Calculate total income and total expence for each month
+        let groupedData = await TransactionsModel.aggregate([
+            {
+                $match: {
+                    created_by: userId,
+                    deleted: false 
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        month: { $month: '$date' },
+                        action: '$action',
+                    },
+                    totalAmount: { $sum: '$amount' },
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    action: '$_id.action',
+                    month: '$_id.month',
+                    totalAmount: 1
+                }
+            }
+        ]);
+
+        const totalBalanceData = groupedData.reduce((acc: any, data: any) => {
+            const monthKey = data.month.toString().length === 1 ? "0" + data.month.toString() : data.month.toString();
+            acc[monthKey] = acc[monthKey] || { month: monthKey, income: 0, expence: 0 };
+
+            if (data.action === 'income') {
+                acc[monthKey].income += data.totalAmount ?? 0;
+            } else if (data.action === 'expence') {
+                acc[monthKey].expence += data.totalAmount ?? 0;
+            }
+            return acc;
+        }, {});
+
+        let months = getLastMonths(12, 'MMM-YY');
+        let data: any = {
+            labels: Array.isArray(months) ? months.map((e: any) => e.monthName) : [],
+            datasets: [
+                {
+                    label: 'Total Balance',
+                    data: [],
+                    backgroundColor: `rgba(${getRandomColor()}, 1)`
+                }
+            ]
+        };
+
+        for (let month of months) {
+            const monthKey = month.month.toString().length === 1 ? "0" + month.month.toString() : month.month.toString();
+            const totalIncome = totalBalanceData[monthKey]?.income || 0;
+            const totalExpence = totalBalanceData[monthKey]?.expence || 0;
+            const totalBalance = (totalIncome - totalExpence) ?? 0;
+
+            data.datasets[0].data.push(totalBalance);
+        }
+        response.handleSuccess(res, data, 'Total Balance Counted Successfully.');
+    },
+
+
     getPieGraphData: async (req: any, res: any) => {
         const userId = new mongoose.Types.ObjectId(req.user.userId);
         let groupedData = await TransactionsModel.aggregate([
             {
                 $match: {
                     created_by: userId,
+                    deleted: false ,
                     action: { $ne: 'income' }
                 },
             },
@@ -177,6 +244,7 @@ export default {
             {
                 $match: {
                     created_by: userId,
+                    deleted: false ,
                 }
             },
             {

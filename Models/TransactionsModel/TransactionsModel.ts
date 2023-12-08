@@ -40,8 +40,13 @@ export default (connection: any) => {
             ref: 'User',
             require: true
         },
+        deleted:{
+            type:Boolean,
+            default:false
+        }
     });
     hooks.transactionAdded(schema,'paymentMethod')
+    hooks.transactionUpdated(schema,'paymentMethod')
     const TransactionsModel = connection.model('Transactions', schema);
     return TransactionsModel;
 };
