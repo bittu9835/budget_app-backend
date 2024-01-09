@@ -10,7 +10,8 @@ TransactionsRout.put('/editTransactions', TransactionsController.editTransaction
 TransactionsRout.get('/getTransactionsForEdit', TransactionsController.getTransactionsForEdit);
 TransactionsRout.get('/getBarGraphData', TransactionsController.getBarGraphData);
 TransactionsRout.get('/getLineGraphData', TransactionsController.getLineGraphData);
-TransactionsRout.get('/getPieGraphData', TransactionsController.getPieGraphData);
+TransactionsRout.get('/getExpenseData', TransactionsController.getExpenseData);
+TransactionsRout.get('/getIncomeData', TransactionsController.getIncomeData);
 TransactionsRout.get('/getBalanceByPaymentMethod', TransactionsController.getBalanceByPaymentMethod);
 
 
