@@ -36,7 +36,8 @@ export default {
     getTransactions: async (req: any, res: any) => {
         try {
             const searchValue = req.query.search;
-            const filter = {
+            const action = req.query.filterData;
+            const filter: any = {
                 created_by: req.user.userId,
                 deleted: false,
                 $or: [
@@ -46,6 +47,9 @@ export default {
                     // { amount: { $eq: parseInt(searchValue) || 0 } }
                 ]
             };
+            if (action) {
+                filter.action = action
+            }
             const Transaction = await TransactionsModel.find(filter).sort({ created_at: -1 });
             response.handleSuccess(res, Transaction, 'Transaction fetched Successfully');
         } catch (error) {
