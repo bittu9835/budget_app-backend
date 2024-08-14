@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/bittu9835/budget_app-backend.git"
   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
