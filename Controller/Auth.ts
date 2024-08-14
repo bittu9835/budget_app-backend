@@ -17,12 +17,12 @@ export default {
                 if (!passwordMatch) {
                     response.unAuthorized(res, 'Password Incorrect.');
                 } else {
-                    const token = generateToken(User);
+                    const jwtToken = generateToken(User);
                     const userDetail = await UserModel.findOne(
                         { _id: User._id },
                         { _id: 1, name: 1, email: 1, profileImage: 1 }
                     )
-                    response.handleSuccess(res, { userDetail, token }, 'User LoggedIn.');
+                    response.handleSuccess(res, { userDetail, jwtToken }, 'User LoggedIn.');
                 }
             }
         } catch (error) {

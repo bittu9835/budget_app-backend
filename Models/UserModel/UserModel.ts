@@ -1,5 +1,5 @@
 export default (connection: any) => {
-    const schema =  new connection.Schema({
+    const schema = new connection.Schema({
         name: {
             type: String,
             required: true
@@ -12,10 +12,15 @@ export default (connection: any) => {
             type: String,
             required: true
         },
-        img_url:{
-            type:String,
-            require:true,
-            default:""
+        googleId: {
+            type: String,
+            required: false,
+            unique: true
+        },
+        img_url: {
+            type: String,
+            require: true,
+            default: ""
         },
     });
     const UserModel = connection.model('User', schema);
