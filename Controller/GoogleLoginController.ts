@@ -1,18 +1,16 @@
-import express, { Request, Response } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { generateToken } from "../JWT"; // Import your generateToken function
 import ServerResponseHandler from '../ServerResponse/ServerRisponse';
 import { ENV } from '../dotenv';
 import { UserModel } from "../Models/index"; // Assuming you have a User model for database interaction
 
-const router = express.Router();
 const client = new OAuth2Client(ENV.GOOGLE_CLIENT_ID);
 const response = new ServerResponseHandler();
 
 export default {
     googleLogin: async (req: any, res: any) => {
         const { token } = req.body;
-
+        console.log(token)
         try {
             // Verify the Google ID token
             const ticket = await client.verifyIdToken({
@@ -20,7 +18,6 @@ export default {
                 audience: ENV.GOOGLE_CLIENT_ID,
             });
             const payload = ticket.getPayload();
-
             if (!payload) {
                 return response.unAuthorized(res, 'Invalid Google token.');
             }
@@ -34,6 +31,7 @@ export default {
                     googleId: sub,
                     email: email,
                     name: name,
+                    password: sub
                 });
                 await user.save();
             }
@@ -54,4 +52,3 @@ export default {
     }
 }
 
-// export default router;

@@ -10,10 +10,11 @@ import Account from "./Routers/AccountRout";
 import Category from "./Routers/CategoryRout";
 import GoogleRouter from "./Routers/GoogleLoginRout";
 // login
+Api.use('/google', GoogleRouter);
 Api.use('/auth', AuthRouter);
 Api.use('/user', UserRouter);
-Api.use('/google', GoogleRouter);
 // other crud
+
 Api.use(verifyToken)
 Api.use('/transaction', Transaction);
 Api.use('/account', Account);
