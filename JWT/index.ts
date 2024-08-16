@@ -5,7 +5,6 @@ import ServerResponseHandler from '../ServerResponse/ServerRisponse';
 import { ENV } from '../dotenv';
 
 const response = new ServerResponseHandler();
-// const client = new OAuth2Client(ENV.GOOGLE_CLIENT_ID); // Initialize Google OAuth2 client
 
 // Define the user object type
 interface User {
@@ -30,8 +29,6 @@ const generateToken = (user: User): string => {
 // Verify a JWT token or Google ID token
 const verifyToken = async (req: any, res: Response, next: NextFunction): Promise<void> => {
     const token = req.header('token');
-    // const token = req.query.token;
-    console.log('token/////////////////////', token);
 
     if (!token) {
         response.unAuthorized(res, 'Access denied. Token is missing.');

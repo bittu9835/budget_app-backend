@@ -10,7 +10,6 @@ const response = new ServerResponseHandler();
 export default {
     googleLogin: async (req: any, res: any) => {
         const { token } = req.body;
-        console.log(token)
         try {
             // Verify the Google ID token
             const ticket = await client.verifyIdToken({
