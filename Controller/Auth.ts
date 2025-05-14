@@ -30,4 +30,14 @@ export default {
             return response.somethingWentWrong(res);
         }
     },
+    ping: async (req: any, res: any) => {
+        const { email } = req.body;
+        try{
+            const user = await UserModel.findOne({ email },{email:1});
+            response.handleSuccess(res, user, 'Pong');
+        } catch (error) {
+            console.log("Exception", error);
+            return response.somethingWentWrong(res);
+        }
+    }
 }
