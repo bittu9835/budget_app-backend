@@ -90,7 +90,7 @@ export default {
     deleteTransactions: async (req: any, res: any) => {
         try {
             await req.body.forEach(async (req: string) => {
-                await TransactionsModel.findOneAndUpdate({ _id: req }, { deleted: true }, { new: true })
+                await TransactionsModel.findOneAndUpdate({ id: req }, { deleted: true }, { new: true })
             });
             response.handleSuccess(res, null, 'Deleted Successfully');
         } catch (error) {
